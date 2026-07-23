@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const cardController_1 = require("../controllers/cardController");
+const auth_1 = require("../middleware/auth");
+const errorHandler_1 = require("../middleware/errorHandler");
+const validator_1 = require("../middleware/validator");
+const router = (0, express_1.Router)();
+router.use(auth_1.requireAuth);
+router.get("/", (0, errorHandler_1.asyncHandler)(cardController_1.listCards));
+router.post("/", (0, validator_1.validateBody)({ accountId: { required: true, type: "string" } }), (0, errorHandler_1.asyncHandler)(cardController_1.addCard));
+router.patch("/:id/freeze", (0, validator_1.validateBody)({ frozen: { required: true, type: "boolean" } }), (0, errorHandler_1.asyncHandler)(cardController_1.setCardFrozen));
+router.patch("/:id/settings", (0, errorHandler_1.asyncHandler)(cardController_1.updateCardSettings));
+exports.default = router;
